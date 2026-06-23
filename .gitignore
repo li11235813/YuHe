@@ -1,0 +1,17 @@
+node_modules/
+data/users.json
+data/tokens.json
+data/notes.json
+data/progress.json
+data/prefs.json
+_build_server.py
+_build_final.py
+_fix_app.py
+_fix2.py
+_b.py
+_w.py
+_launch.vbs
+_err.txt
+_out.txt
+start.bat
+*.py

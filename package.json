@@ -1,0 +1,17 @@
+{
+  "name": "reading-notes-site",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "scan": "node scripts/scan-library.js",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "adm-zip": "^0.5.17",
+    "epubjs": "^0.3.93",
+    "express": "^4.21.2",
+    "fast-xml-parser": "^5.9.3",
+    "pdf-parse": "^2.4.5"
+  }
+}

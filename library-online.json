@@ -1,0 +1,87 @@
+{
+  "generatedAt": "2026-06-23T15:26:05.843Z",
+  "libraryRoot": "/books",
+  "total": 8,
+  "books": [
+    {
+      "id": "bc202bbad0dd",
+      "title": "1984 (乔治· 奥威尔（George Orwell）, 董乐山, 傅惟慈 译)",
+      "ext": "epub",
+      "type": "epub",
+      "relativePath": "1984 (乔治· 奥威尔（George Orwell）, 董乐山, 傅惟慈 译) (z-library.sk, 1lib.sk, z-lib.sk).epub",
+      "publicPath": "/books/1984%20(%E4%B9%94%E6%B2%BB%C2%B7%20%E5%A5%A5%E5%A8%81%E5%B0%94%EF%BC%88George%20Orwell%EF%BC%89%2C%20%E8%91%A3%E4%B9%90%E5%B1%B1%2C%20%E5%82%85%E6%83%9F%E6%85%88%20%E8%AF%91)%20(z-library.sk%2C%201lib.sk%2C%20z-lib.sk).epub",
+      "size": 336443,
+      "updatedAt": 1782223132438.6528
+    },
+    {
+      "id": "9199a5eef07f",
+      "title": "独孤求败",
+      "ext": "txt",
+      "type": "text",
+      "relativePath": "独孤求败.txt",
+      "publicPath": "/books/%E7%8B%AC%E5%AD%A4%E6%B1%82%E8%B4%A5.txt",
+      "size": 2336,
+      "updatedAt": 1782223132499.6387
+    },
+    {
+      "id": "e5903c7b7327",
+      "title": "额尔古纳河右岸 (迟子建)",
+      "ext": "epub",
+      "type": "epub",
+      "relativePath": "额尔古纳河右岸 (迟子建) (z-library.sk, 1lib.sk, z-lib.sk).epub",
+      "publicPath": "/books/%E9%A2%9D%E5%B0%94%E5%8F%A4%E7%BA%B3%E6%B2%B3%E5%8F%B3%E5%B2%B8%20(%E8%BF%9F%E5%AD%90%E5%BB%BA)%20(z-library.sk%2C%201lib.sk%2C%20z-lib.sk).epub",
+      "size": 306933,
+      "updatedAt": 1782223132656.8604
+    },
+    {
+      "id": "5d9ef8b9ee54",
+      "title": "非对称风险 ([美]纳西姆·尼古拉斯 [[美]纳西姆·尼古拉斯])",
+      "ext": "epub",
+      "type": "epub",
+      "relativePath": "非对称风险 ([美]纳西姆·尼古拉斯 [[美]纳西姆·尼古拉斯]) (z-library.sk, 1lib.sk, z-lib.sk).epub",
+      "publicPath": "/books/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E9%A3%8E%E9%99%A9%20(%5B%E7%BE%8E%5D%E7%BA%B3%E8%A5%BF%E5%A7%86%C2%B7%E5%B0%BC%E5%8F%A4%E6%8B%89%E6%96%AF%20%5B%5B%E7%BE%8E%5D%E7%BA%B3%E8%A5%BF%E5%A7%86%C2%B7%E5%B0%BC%E5%8F%A4%E6%8B%89%E6%96%AF%5D)%20(z-library.sk%2C%201lib.sk%2C%20z-lib.sk).epub",
+      "size": 5657467,
+      "updatedAt": 1782223132640.753
+    },
+    {
+      "id": "80826828f680",
+      "title": "矛盾论 (毛泽东)",
+      "ext": "epub",
+      "type": "epub",
+      "relativePath": "矛盾论 (毛泽东) (z-library.sk, 1lib.sk, z-lib.sk).epub",
+      "publicPath": "/books/%E7%9F%9B%E7%9B%BE%E8%AE%BA%20(%E6%AF%9B%E6%B3%BD%E4%B8%9C)%20(z-library.sk%2C%201lib.sk%2C%20z-lib.sk).epub",
+      "size": 287196,
+      "updatedAt": 1782223132520.2195
+    },
+    {
+      "id": "59aa73eecb6e",
+      "title": "明朝那些事儿 (当年明月)",
+      "ext": "epub",
+      "type": "epub",
+      "relativePath": "明朝那些事儿 (当年明月) (z-library.sk, 1lib.sk, z-lib.sk).epub",
+      "publicPath": "/books/%E6%98%8E%E6%9C%9D%E9%82%A3%E4%BA%9B%E4%BA%8B%E5%84%BF%20(%E5%BD%93%E5%B9%B4%E6%98%8E%E6%9C%88)%20(z-library.sk%2C%201lib.sk%2C%20z-lib.sk).epub",
+      "size": 3250259,
+      "updatedAt": 1782223132483.217
+    },
+    {
+      "id": "3a23ddc02165",
+      "title": "遥远的救世主根据本书改编的电视剧《天道》正在全国掀起极大反响 (豆豆)",
+      "ext": "epub",
+      "type": "epub",
+      "relativePath": "遥远的救世主根据本书改编的电视剧《天道》正在全国掀起极大反响 (豆豆) (z-library.sk, 1lib.sk, z-lib.sk).epub",
+      "publicPath": "/books/%E9%81%A5%E8%BF%9C%E7%9A%84%E6%95%91%E4%B8%96%E4%B8%BB%E6%A0%B9%E6%8D%AE%E6%9C%AC%E4%B9%A6%E6%94%B9%E7%BC%96%E7%9A%84%E7%94%B5%E8%A7%86%E5%89%A7%E3%80%8A%E5%A4%A9%E9%81%93%E3%80%8B%E6%AD%A3%E5%9C%A8%E5%85%A8%E5%9B%BD%E6%8E%80%E8%B5%B7%E6%9E%81%E5%A4%A7%E5%8F%8D%E5%93%8D%20(%E8%B1%86%E8%B1%86)%20(z-library.sk%2C%201lib.sk%2C%20z-lib.sk).epub",
+      "size": 657020,
+      "updatedAt": 1782223132578.3574
+    },
+    {
+      "id": "77ecaedacda2",
+      "title": "罪与罚 (陀思妥耶夫斯基)",
+      "ext": "epub",
+      "type": "epub",
+      "relativePath": "罪与罚 (陀思妥耶夫斯基) (z-library.sk, 1lib.sk, z-lib.sk).epub",
+      "publicPath": "/books/%E7%BD%AA%E4%B8%8E%E7%BD%9A%20(%E9%99%80%E6%80%9D%E5%A6%A5%E8%80%B6%E5%A4%AB%E6%96%AF%E5%9F%BA)%20(z-library.sk%2C%201lib.sk%2C%20z-lib.sk).epub",
+      "size": 1877779,
+      "updatedAt": 1782223132556.644
+    }
+  ]
+}
