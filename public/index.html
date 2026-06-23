@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>黑读</title>
+<style>
+:root {
+  --bg: #0f0f0f;
+  --panel: #151515;
+  --panel-soft: #1b1b1b;
+  --line: #2a2a2a;
+  --text: #f1efe8;
+  --muted: #9c978d;
+  --accent: #d4c29a;
+  --reader-bg: #0f0f0f;
+  --reader-fg: #f4f0e7;
+  --reader-sidebar-bg: #0c0c0c;
+  --font-size: 22px;
+  --line-height: 1.95;
+  --page-width: 860px;
+  --font-family: "FangSong", "STFangsong", "Noto Serif SC", serif;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--text); }
+body {
+  font-family: var(--font-family);
+  font-weight: 700;
+}
+
+.top-nav {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+
+.top-nav a {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 8px 14px;
+  color: var(--muted);
+}
+
+.top-nav a.active {
+  color: #111;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.notes-page {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 28px 24px 40px;
+}
+
+.notes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.note-card {
+  background: rgba(18,18,18,.95);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 18px;
+}
+
+.note-card-title {
+  font-size: 18px;
+  margin: 0 0 10px;
+}
+
+.note-card-book {
+  color: var(--accent);
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+.note-card-date {
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 12px;
+}
+
+.note-card-content {
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.8;
+  white-space: pre-wrap;
+}
+
+.note-compose {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.note-compose-row {
+  display: grid;
+  grid-template-columns: 1fr 180px;
+  gap: 12px;
+}
+
+.mobile-reading-actions {
+  display: none;
+}
+
+.range-input {
+  width: 100%;
+}
+
+button, input, textarea, select { font: inherit; }
+a { color: inherit; text-decoration: none; }
+
+.app-shell {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #050505 0%, #090909 100%);
+}
+
+.library-page {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 28px 24px 40px;
+}
+
+.library-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.library-title {
+  font-size: 34px;
+  margin: 0;
+}
+
+.library-subtitle {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.library-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.search-input,
+.note-editor textarea,
+.note-editor input {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  color: var(--text);
+  border-radius: 14px;
+  padding: 12px 14px;
+  outline: none;
+}
+
+.search-input {
+  min-width: 280px;
+}
+
+.ghost-btn,
+.primary-btn,
+.reader-toolbar button,
+.font-chip {
+  border: 1px solid var(--line);
+  color: var(--text);
+  background: var(--panel);
+  border-radius: 999px;
+  padding: 10px 14px;
+  cursor: pointer;
+}
+
+.primary-btn {
+  background: var(--accent);
+  color: #111;
+  border-color: var(--accent);
+}
+
+.book-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 18px;
+}
+
+.book-card {
+  background: rgba(18, 18, 18, 0.95);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 18px;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform .18s ease, border-color .18s ease;
+}
+
+.book-card:hover {
+  transform: translateY(-2px);
+  border-color: #474038;
+}
+
+.book-type {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: var(--panel-soft);
+  color: var(--accent);
+  font-size: 12px;
+}
+
+.book-name {
+  font-size: 20px;
+  line-height: 1.5;
+  margin: 18px 0 8px;
+}
+
+.book-meta {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.book-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.reader-page {
+  height: 100vh;
+  background: var(--reader-bg);
+  color: var(--reader-fg);
+}
+
+.reader-toolbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  background: rgba(5, 5, 5, 0.94);
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  backdrop-filter: blur(12px);
+}
+
+.reader-toolbar-left,
+.reader-toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.reader-title {
+  max-width: 42vw;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--muted);
+}
+
+.reader-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  height: 100vh;
+  padding-top: 70px;
+}
+
+.reader-main {
+  position: relative;
+  min-width: 0;
+  background: var(--reader-bg);
+}
+
+.reader-stage,
+#epub-reader {
+  position: absolute;
+  inset: 0;
+}
+
+.text-reader {
+  max-width: var(--page-width);
+  margin: 0 auto;
+  height: 100%;
+  padding: 36px 28px 56px;
+  overflow: auto;
+  scroll-behavior: smooth;
+}
+
+.text-reader-content {
+  font-size: var(--font-size);
+  line-height: var(--line-height);
+  white-space: pre-wrap;
+  word-break: break-word;
+  letter-spacing: 0.02em;
+}
+
+.reader-sidebar {
+  border-left: 1px solid rgba(255,255,255,0.06);
+  background: var(--reader-sidebar-bg);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.reader-panel {
+  padding: 18px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.reader-panel h3 {
+  margin: 0 0 12px;
+  font-size: 16px;
+}
+
+.font-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.font-chip.active {
+  background: var(--accent);
+  color: #111;
+  border-color: var(--accent);
+}
+
+.note-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+.note-editor textarea {
+  min-height: 240px;
+  resize: vertical;
+  line-height: 1.8;
+}
+
+.note-meta,
+.reader-progress,
+.reader-tip,
+.empty-state {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.empty-state {
+  padding: 48px 0;
+}
+
+.hidden { display: none; }
+
+@media (max-width: 980px) {
+  .reader-layout {
+    grid-template-columns: 1fr;
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .reader-main {
+    min-height: calc(100vh - 70px);
+  }
+
+  .reader-stage,
+  #epub-reader {
+    position: relative;
+    min-height: calc(100vh - 70px);
+  }
+
+  .reader-sidebar {
+    position: relative;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    height: auto;
+    transform: none;
+    transition: none;
+    z-index: 1;
+    border-left: none;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .reader-sidebar.open {
+    transform: none;
+  }
+
+  .search-input {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .library-head,
+  .library-actions,
+  .note-compose-row {
+    flex-direction: column;
+    align-items: stretch;
+    grid-template-columns: 1fr;
+  }
+
+  .reader-title {
+    max-width: 42vw;
+  }
+
+  .text-reader {
+    padding: 24px 18px 40px;
+    height: auto;
+    min-height: calc(100vh - 70px);
+  }
+
+  .mobile-reading-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 12px;
+  }
+
+  .notes-page {
+    padding: 20px 16px 32px;
+  }
+
+  .login-card {
+    width: 100%;
+    max-width: 380px;
+    padding: 32px 24px;
+  }
+
+  .library-head .library-actions:first-of-type {
+    order: -1;
+  }
+}
+
+
+/* Login page */
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 48px 40px;
+  background: rgba(18, 18, 18, 0.95);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+}
+
+.login-title {
+  font-size: 32px;
+  margin: 0 0 8px;
+  text-align: center;
+}
+
+.login-sub {
+  color: var(--muted);
+  font-size: 14px;
+  text-align: center;
+  margin: 0 0 28px;
+}
+
+.login-form {
+  display: grid;
+  gap: 14px;
+}
+
+.login-form .search-input {
+  width: 100%;
+}
+
+.login-error {
+  color: #e07060;
+  font-size: 13px;
+  text-align: center;
+  margin-top: 8px;
+}
+
+.login-switch {
+  text-align: center;
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 20px;
+}
+
+.login-switch a {
+  color: var(--accent);
+}
+
+/* Note card actions */
+.note-card {
+  position: relative;
+}
+
+.note-card-actions {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  gap: 6px;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.note-card:hover .note-card-actions {
+  opacity: 1;
+}
+
+.note-action-btn {
+  font-size: 14px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  min-width: 28px;
+  text-align: center;
+}
+
+.note-delete-btn:hover {
+  color: #e07060;
+  border-color: #e07060;
+}
+
+/* User badge */
+.user-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--panel-soft);
+  color: var(--accent);
+  font-size: 12px;
+}
+
+/* Color input */
+.color-input {
+  width: 100%;
+  height: 36px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 4px;
+  background: var(--panel);
+  cursor: pointer;
+}
+
+.color-input::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.color-input::-webkit-color-swatch {
+  border: none;
+  border-radius: 4px;
+}
+
+</style>
+</head>
+<body>
+<div id="app"><div style="color:#d4c29a;padding:40px;text-align:center;font-family:sans-serif;">正在加载应用...</div></div>
+<script>
+window.__EMBEDDED_LIBRARY__ = {"generatedAt": "2026-06-23T14:34:55.011Z", "libraryRoot": "/books", "total": 8, "books": [{"id": "bc202bbad0dd", "title": "1984 (\u4e54\u6cbb\u00b7 \u5965\u5a01\u5c14\uff08George Orwell\uff09, \u8463\u4e50\u5c71, \u5085\u60df\u6148 \u8bd1)", "ext": "epub", "type": "epub", "relativePath": "1984 (\u4e54\u6cbb\u00b7 \u5965\u5a01\u5c14\uff08George Orwell\uff09, \u8463\u4e50\u5c71, \u5085\u60df\u6148 \u8bd1) (z-library.sk, 1lib.sk, z-lib.sk).epub", "publicPath": "/books/1984%20(%E4%B9%94%E6%B2%BB%C2%B7%20%E5%A5%A5%E5%A8%81%E5%B0%94%EF%BC%88George%20Orwell%EF%BC%89%2C%20%E8%91%A3%E4%B9%90%E5%B1%B1%2C%20%E5%82%85%E6%83%9F%E6%85%88%20%E8%AF%91)%20(z-library.sk%2C%201lib.sk%2C%20z-lib.sk).epub", "size": 336443, "updatedAt": 1782223132438.6528}, {"id": "9199a5eef07f", "title": "\u72ec\u5b64\u6c42\u8d25", "ext": "txt", "type": "text", "relativePath": "\u72ec\u5b64\u6c42\u8d25.txt", "publicPath": "/books/%E7%8B%AC%E5%AD%A4%E6%B1%82%E8%B4%A5.txt", "size": 2336, "updatedAt": 1782223132499.6387}, {"id": "e5903c7b7327", "title": "\u989d\u5c14\u53e4\u7eb3\u6cb3\u53f3\u5cb8 (\u8fdf\u5b50\u5efa)", "ext": "epub", "type": "epub", "relativePath": "\u989d\u5c14\u53e4\u7eb3\u6cb3\u53f3\u5cb8 (\u8fdf\u5b50\u5efa) (z-library.sk, 1lib.sk, z-lib.sk).epub", "publicPath": "/books/%E9%A2%9D%E5%B0%94%E5%8F%A4%E7%BA%B3%E6%B2%B3%E5%8F%B3%E5%B2%B8%20(%E8%BF%9F%E5%AD%90%E5%BB%BA)%20(z-library.sk%2C%201lib.sk%2C%20z-lib.sk).epub", "size": 306933, "updatedAt": 1782223132656.8604}, {"id": "5d9ef8b9ee54", "title": "\u975e\u5bf9\u79f0\u98ce\u9669 ([\u7f8e]\u7eb3\u897f\u59c6\u00b7\u5c3c\u53e4\u62c9\u65af [[\u7f8e]\u7eb3\u897f\u59c6\u00b7\u5c3c\u53e4\u62c9\u65af])", "ext": "epub", "type": "epub", "relativePath": "\u975e\u5bf9\u79f0\u98ce\u9669 ([\u7f8e]\u7eb3\u897f\u59c6\u00b7\u5c3c\u53e4\u62c9\u65af [[\u7f8e]\u7eb3\u897f\u59c6\u00b7\u5c3c\u53e4\u62c9\u65af]) (z-library.sk, 1lib.sk, z-lib.sk).epub", "publicPath": "/books/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E9%A3%8E%E9%99%A9%20(%5B%E7%BE%8E%5D%E7%BA%B3%E8%A5%BF%E5%A7%86%C2%B7%E5%B0%BC%E5%8F%A4%E6%8B%89%E6%96%AF%20%5B%5B%E7%BE%8E%5D%E7%BA%B3%E8%A5%BF%E5%A7%86%C2%B7%E5%B0%BC%E5%8F%A4%E6%8B%89%E6%96%AF%5D)%20(z-library.sk%2C%201lib.sk%2C%20z-lib.sk).epub", "size": 5657467, "updatedAt": 1782223132640.753}, {"id": "80826828f680", "title": "\u77db\u76fe\u8bba (\u6bdb\u6cfd\u4e1c)", "ext": "epub", "type": "epub", "relativePath": "\u77db\u76fe\u8bba (\u6bdb\u6cfd\u4e1c) (z-library.sk, 1lib.sk, z-lib.sk).epub", "publicPath": "/books/%E7%9F%9B%E7%9B%BE%E8%AE%BA%20(%E6%AF%9B%E6%B3%BD%E4%B8%9C)%20(z-library.sk%2C%201lib.sk%2C%20z-lib.sk).epub", "size": 287196, "updatedAt": 1782223132520.2195}, {"id": "59aa73eecb6e", "title": "\u660e\u671d\u90a3\u4e9b\u4e8b\u513f (\u5f53\u5e74\u660e\u6708)", "ext": "epub", "type": "epub", "relativePath": "\u660e\u671d\u90a3\u4e9b\u4e8b\u513f (\u5f53\u5e74\u660e\u6708) (z-library.sk, 1lib.sk, z-lib.sk).epub", "publicPath": "/books/%E6%98%8E%E6%9C%9D%E9%82%A3%E4%BA%9B%E4%BA%8B%E5%84%BF%20(%E5%BD%93%E5%B9%B4%E6%98%8E%E6%9C%88)%20(z-library.sk%2C%201lib.sk%2C%20z-lib.sk).epub", "size": 3250259, "updatedAt": 1782223132483.217}, {"id": "3a23ddc02165", "title": "\u9065\u8fdc\u7684\u6551\u4e16\u4e3b\u6839\u636e\u672c\u4e66\u6539\u7f16\u7684\u7535\u89c6\u5267\u300a\u5929\u9053\u300b\u6b63\u5728\u5168\u56fd\u6380\u8d77\u6781\u5927\u53cd\u54cd (\u8c46\u8c46)", "ext": "epub", "type": "epub", "relativePath": "\u9065\u8fdc\u7684\u6551\u4e16\u4e3b\u6839\u636e\u672c\u4e66\u6539\u7f16\u7684\u7535\u89c6\u5267\u300a\u5929\u9053\u300b\u6b63\u5728\u5168\u56fd\u6380\u8d77\u6781\u5927\u53cd\u54cd (\u8c46\u8c46) (z-library.sk, 1lib.sk, z-lib.sk).epub", "publicPath": "/books/%E9%81%A5%E8%BF%9C%E7%9A%84%E6%95%91%E4%B8%96%E4%B8%BB%E6%A0%B9%E6%8D%AE%E6%9C%AC%E4%B9%A6%E6%94%B9%E7%BC%96%E7%9A%84%E7%94%B5%E8%A7%86%E5%89%A7%E3%80%8A%E5%A4%A9%E9%81%93%E3%80%8B%E6%AD%A3%E5%9C%A8%E5%85%A8%E5%9B%BD%E6%8E%80%E8%B5%B7%E6%9E%81%E5%A4%A7%E5%8F%8D%E5%93%8D%20(%E8%B1%86%E8%B1%86)%20(z-library.sk%2C%201lib.sk%2C%20z-lib.sk).epub", "size": 657020, "updatedAt": 1782223132578.3574}, {"id": "77ecaedacda2", "title": "\u7f6a\u4e0e\u7f5a (\u9640\u601d\u59a5\u8036\u592b\u65af\u57fa)", "ext": "epub", "type": "epub", "relativePath": "\u7f6a\u4e0e\u7f5a (\u9640\u601d\u59a5\u8036\u592b\u65af\u57fa) (z-library.sk, 1lib.sk, z-lib.sk).epub", "publicPath": "/books/%E7%BD%AA%E4%B8%8E%E7%BD%9A%20(%E9%99%80%E6%80%9D%E5%A6%A5%E8%80%B6%E5%A4%AB%E6%96%AF%E5%9F%BA)%20(z-library.sk%2C%201lib.sk%2C%20z-lib.sk).epub", "size": 1877779, "updatedAt": 1782223132556.644}]};
+window.__TXT_BOOKS__ = {"9199a5eef07f": "\u65e0\u5251\uff0c\u662f\u6211\u4e0e\u201c\u6211\u201d\u7684\u5171\u8d62\n\u72ec\u5b64\u6c42\u8d25\uff1a\u4ece\u5de5\u5177 \u2192 \u89c4\u5f8b \u2192 \u672c\u8d28\u7684\u8ba4\u8bc6\n\u4e00\u3001\u5229\u5251\u65e0\u610f\uff0c\u51cc\u5389\u521a\u731b\n\u603b\u662f\u5728\u5bfb\u627e\u66f4\u597d\u7684\u5251\u3002\n\u5bf9\u5e94\u9636\u6bb5\uff1a\u8ffd\u6c42\u66f4\u5f3a\u7684\u5de5\u5177\u3001\u66f4\u9ad8\u6548\u7684\u65b9\u6cd5\uff0c\u5e0c\u671b\u4f9d\u9760\u5916\u7269\u63d0\u5347\u81ea\u5df1\u3002\n\u4e8c\u3001\u7d2b\u8587\u8f6f\u5251\uff0c\u4ee5\u67d4\u514b\u521a\n\u4e16\u754c\u4e0d\u662f\u786c\u78b0\u786c\u3002\u7af9\u7269\u7686\u67d4\uff0c\u4ee5\u9053\u9a6d\u529b\u3002\u4eba\u6027\u81ea\u6709\u89c4\u5f8b\u3002\u987a\u52bf\u800c\u4e3a\n\u5bf9\u5e94\u9636\u6bb5\uff1a\u5f00\u59cb\u660e\u767d\u89c4\u5f8b\u6bd4\u529b\u91cf\u66f4\u91cd\u8981\u3002\n\u4e09\u3001\u91cd\u5251\u65e0\u950b\uff0c\u5927\u5de7\u4e0d\u5de5\n\u56db\u5341\u5c81\u524d\u6043\u4e4b\u6a2a\u884c\u5929\u4e0b\u3002\n\u5bf9\u5e94\u9636\u6bb5\uff1a\u505a\u51cf\u6cd5\u3002\u5065\u5eb7\u3001\u7761\u7720\u3001\u9605\u8bfb\u3002\n\u8d8b\u4e8e\u5e73\u6de1\uff0c\u81ea\u7531\u65f6\u523b\u3002\u660e\u767d\u5f88\u591a\u65f6\u5019\u4e0d\u662f\u589e\u52a0\u80fd\u529b\uff0c\u800c\u662f\u51cf\u5c11\u963b\u529b\u3002\u81ea\u7531\u5373\u514b\u5236\u3002\n\u56db\u3001\u56db\u5341\u5c81\u4e4b\u540e\uff0c\u4e0d\u6ede\u4e8e\u7269\u3002\u8349\u6728\u7af9\u77f3\u7686\u53ef\u4e3a\u5251\u3002\n\u76ee\u5149\u8f6c\u5411\u81ea\u8eab\u3002\u81ea\u6211\u7cbe\u8fdb\u3002\u8ba4\u77e5\u5f00\u59cb\u53d1\u529b\u594f\u6548\u7a81\u7834\u3002\n\u91d1\u94b1 \u5251\u6cd5\u4e0d\u6e90\u4e8e\u529b\u91cf\uff0c\u6765\u81ea\u4f7f\u7528\u7684\u4eba\u3002\u5fc3\u6cd5\u80dc\u4e8e\u4e07\u6cd5\uff0c\u9053\u6cd5\u80dc\u4e8e\u672f\n\u5bf9\u5e94\u9636\u6bb5\uff1a\u5de5\u5177\u5df2\u7ecf\u4e0d\u518d\u91cd\u8981\uff0c\u4efb\u4f55\u4e8b\u7269\u90fd\u53ef\u4ee5\u6210\u4e3a\u624b\u6bb5\u3002\u5173\u952e\u5728\u4e8e\u81ea\u8eab\u4fee\u70bc\u3002\n\u4e94\u3001\u6e10\u5165\u65e0\u5251\u80dc\u6709\u5251\u4e4b\u5883\n\u771f\u6b63\u7684\u65e0\u5251\uff1a\u4e0d\u6267\u7740\u4e8e\u8bc1\u660e\u3002\n\u9002\u4e8e\u5f53\u4e0b\u3002\u4e0d\u8ffd\u5f62\u800c\u6c42\u5b9e\u3002\n\u65e0\u5251\uff0c\u662f\u6211\u4e0e\u201c\u6211\u201d\u7684\u5171\u8d62\u3002\nBe water, my friend. \u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\n\u300a\u4ece\u5229\u5251\u5230\u65e0\u5251\u300b\n\u4eba\u7684\u6210\u957f\uff0c\u5f80\u5f80\u7ecf\u5386\u4ece\u5de5\u5177\u5230\u89c4\u5f8b\uff0c\u518d\u5230\u8ba4\u8bc6\u672c\u8d28\u7684\u8fc7\u7a0b\u3002\n\u8d77\u521d\u603b\u60f3\u5bfb\u627e\u66f4\u950b\u5229\u7684\u5251\uff0c\u4ee5\u4e3a\u66f4\u597d\u7684\u5de5\u5177\u80fd\u591f\u89e3\u51b3\u95ee\u9898\uff1b\u540e\u6765\u53d1\u73b0\u4e16\u754c\u5e76\u975e\u786c\u78b0\u786c\uff0c\n\u800c\u662f\u9075\u5faa\u89c4\u5f8b\u8fd0\u884c\uff1b\u518d\u540e\u6765\u660e\u767d\uff0c\u5927\u5de7\u4e0d\u5de5\uff0c\u771f\u6b63\u7684\u9ad8\u624b\u90fd\u5728\u505a\u51cf\u6cd5\uff0c\u51cf\u5c11\u963b\u529b\u800c\u975e\u589e\u52a0\u6280\n\u5de7\u3002\n\u5f53\u4e0d\u518d\u6267\u7740\u4e8e\u5916\u7269\u65f6\uff0c\u8349\u6728\u7af9\u77f3\u7686\u53ef\u4e3a\u5251\u3002\u5de5\u5177\u4e0d\u518d\u91cd\u8981\uff0c\u91cd\u8981\u7684\u662f\u8ba4\u77e5\u3001\u54c1\u683c\u4e0e\u4fee\u517b\u3002\n\u6700\u7ec8\uff0c\u65e0\u5251\u80dc\u6709\u5251\uff0c\u4e0d\u518d\u6267\u7740\u4e8e\u8bc1\u660e\u81ea\u5df1\uff0c\u4e0d\u518d\u6c89\u8ff7\u4e8e\u6280\u5de7\u672c\u8eab\uff0c\u800c\u662f\u5728\u89c4\u5f8b\u4e2d\u884c\u52a8\uff0c\u5728\u884c\n\u52a8\u4e2d\u4f53\u609f\u9053\u3002\n\u5438\u6536\u6709\u7528\u7684\uff0c\u629b\u5f03\u65e0\u7528\u7684\uff0c\u52a0\u5165\u5c5e\u4e8e\u81ea\u5df1\u7684\u4e1c\u897f\u3002\n\u50cf\u6c34\u4e00\u6837\u3002Be water, my friend. \u5c11\u5e74\u65f6\u603b\u60f3\u5f97\u5230\u4e00\u628a\u5929\u4e0b\u7b2c\u4e00\u7684\u5251\u3002\u540e\u6765\u624d\u660e\u767d\uff0c\n\u5251\u53ea\u662f\u501f\u6765\u7684\u529b\u91cf\u3002\u89c4\u5f8b\u662f\u5929\u5730\u7684\u529b\u91cf\u3002\n\u800c\u771f\u6b63\u80fd\u591f\u966a\u81ea\u5df1\u8d70\u5b8c\u4e00\u751f\u7684\uff0c\u4ece\u6765\u4e0d\u662f\u5251\uff0c\n\u662f\u90a3\u4e2a\u8d8a\u6765\u8d8a\u6e05\u9192\u3001\u8d8a\u6765\u8d8a\u81ea\u7531\u7684\u81ea\u5df1\u3002\n\u76f4\u5230\u67d0\u4e00\u5929\uff0c\u767d\u9a6c\u8dd1\u8fdb\u96fe\u4e2d\uff0c\u5229\u5251\u5f52\u4e8e\u9798\u91cc\u3002\n\u65e0\u5251\uff0c\u4e0d\u662f\u6ca1\u6709\u5251\u3002\n\u800c\u662f\u4e0d\u518d\u9700\u8981\u5411\u4efb\u4f55\u4eba\u8bc1\u660e\u624b\u4e2d\u6709\u5251\u3002"};
+const TOKEN_KEY = "auth_token_v1";
+
+const state = {
+  library: null,
+  query: "",
+  sidebarOpen: false,
+  currentCleanup: null,
+  notesQuery: "",
+  token: null,
+  username: null,
+  notes: null,
+  progress: null,
+  prefs: null,
+  editNoteId: null,
+};
+
+function getToken() {
+  if (state.token) return state.token;
+  state.token = localStorage.getItem(TOKEN_KEY) || "";
+  return state.token;
+}
+
+function setToken(token) {
+  state.token = token;
+  localStorage.setItem(TOKEN_KEY, token);
+}
+
+function clearToken() {
+  state.token = null;
+  state.username = null;
+  state.notes = null;
+  state.progress = null;
+  state.prefs = null;
+  localStorage.removeItem(TOKEN_KEY);
+}
+
+async function api(path, options = {}) {
+  const headers = { ...(options.headers || {}) };
+  if (options.body && typeof options.body === "object" && !(options.body instanceof FormData)) {
+    headers["Content-Type"] = "application/json";
+    options.body = JSON.stringify(options.body);
+  }
+  const token = getToken();
+  if (token) headers["Authorization"] = "Bearer " + token;
+  const res = await fetch(path, { ...options, headers });
+  if (res.status === 401) { clearToken(); renderApp(); return null; }
+  const text = await res.text();
+  try { return JSON.parse(text); } catch { return text; }
+}
+
+async function checkAuth() {
+  const token = getToken();
+  if (!token) return false;
+  try {
+    const me = await api("/api/auth/me");
+    if (!me || me.error) return false;
+    state.username = me.username;
+  } catch {
+    // Server unreachable — still let them use offline mode if they chose it
+    if (state.username === '离线用户') return true;
+    return false;
+  }
+  return true;
+}
+
+window.addEventListener("hashchange", renderApp);
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", renderApp);
+} else {
+  renderApp();
+}
+
+async function renderApp() {
+  cleanupCurrentView();
+  const app = document.getElementById("app");
+
+  if (!(await checkAuth())) {
+    renderLoginPage(app);
+    return;
+  }
+
+  const route = getRoute();
+
+  if (route.name === "reader") {
+    await renderReaderPage(app, route.id);
+    return;
+  }
+
+  if (route.name === "notes") {
+    await renderNotesPage(app);
+    return;
+  }
+
+  await renderLibraryPage(app);
+}
+
+function renderLoginPage(app) {
+  const isRegister = location.hash === "#/register";
+  app.innerHTML = '<div class="app-shell" style="display:flex;align-items:center;justify-content:center;min-height:100vh;"><div class="login-card"><h2 class="login-title">黑读</h2><p class="login-sub">' + (isRegister ? "注册新账户" : "登录以同步笔记与阅读进度") + '</p><div class="login-form"><input id="login-username" class="search-input" placeholder="用户名" /><input id="login-password" class="search-input" type="password" placeholder="密码" /><button id="login-submit" class="primary-btn" style="width:100%;">' + (isRegister ? "注册" : "登录") + '</button><button id="login-offline" class="ghost-btn" style="width:100%;margin-top:10px;">离线使用（本地存储）</button><div id="login-error" class="login-error hidden"></div></div><div class="login-switch">' + (isRegister ? '已有账户？<a href="#/">登录</a>' : '没有账户？<a href="#/register">注册</a>') + '</div></div></div>';
+
+  const submit = () => {
+    const username = app.querySelector("#login-username").value.trim();
+    const password = app.querySelector("#login-password").value;
+    const errEl = app.querySelector("#login-error");
+    if (!username || !password) { errEl.textContent = "请填写用户名和密码"; errEl.classList.remove("hidden"); return; }
+    const endpoint = isRegister ? "/api/auth/register" : "/api/auth/login";
+    api(endpoint, { method: "POST", body: { username, password } }).then((data) => {
+      if (!data || data.error) { errEl.textContent = data?.error || "操作失败"; errEl.classList.remove("hidden"); return; }
+      setToken(data.token);
+      state.username = data.username;
+      location.hash = "#/";
+      renderApp();
+    });
+  };
+
+  app.querySelector("#login-submit").addEventListener("click", submit);
+  app.querySelector("#login-offline").addEventListener("click", () => {
+    state.username = '离线用户';
+    setToken('offline-' + Date.now());
+    location.hash = '#/';
+    renderApp();
+  });
+  app.querySelector("#login-password").addEventListener("keydown", (e) => { if (e.key === "Enter") submit(); });
+}
+
+async function renderLibraryPage(app) {
+  const library = await loadLibrary();
+  const books = filterBooks(library.books, state.query);
+
+  app.innerHTML = '<div class="app-shell"><div class="library-page"><div class="library-head"><div><h1 class="library-title">黑读</h1><p class="library-subtitle">本地极简阅读 + 独立笔记</p><div class="top-nav"><a href="#/" class="active">书库</a><a href="#/notes">笔记</a></div></div><div class="library-actions"><span class="user-badge">' + state.username + '</span><button class="ghost-btn" id="upload-btn">上传书籍</button><button class="ghost-btn" id="scan-btn">扫描书库</button><button class="ghost-btn" id="logout-btn">退出</button></div><div class="library-actions"><input class="search-input" id="search-input" placeholder="搜索书名 / 文件类型" value="' + escapeAttr(state.query) + '" /><button class="ghost-btn" id="refresh-btn">刷新目录</button><input type="file" id="upload-file-input" accept=".epub,.txt" style="display:none" /></div></div><div class="book-grid">' + (books.length ? books.map(renderBookCard).join("") : '<div class="empty-state">没搜到结果</div>') + '</div></div></div>';
+
+  app.querySelector("#search-input").addEventListener("input", (event) => {
+    state.query = event.target.value;
+    renderLibraryPage(app);
+  });
+
+  app.querySelector("#refresh-btn").addEventListener("click", async () => {
+    state.library = null;
+    await renderLibraryPage(app);
+  });
+
+  app.querySelector("#logout-btn").addEventListener("click", () => {
+    clearToken();
+    location.hash = "#/";
+    renderApp();
+  });
+
+  app.querySelector("#scan-btn").addEventListener("click", async () => {
+    await api("/api/books/scan", { method: "POST" });
+    state.library = null;
+    await renderLibraryPage(app);
+  });
+
+  app.querySelector("#upload-btn").addEventListener("click", () => {
+    app.querySelector("#upload-file-input").click();
+  });
+
+  app.querySelector("#upload-file-input").addEventListener("change", async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      const base64 = e.target.result.split(",")[1];
+      const result = await api("/api/books/upload", { method: "POST", body: { fileName: file.name, content: base64 } });
+      if (result && result.ok) { state.library = null; await renderLibraryPage(app); }
+      else { alert("上传失败: " + (result?.error || "未知错误")); }
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+async function renderNotesPage(app) {
+  const library = await loadLibrary();
+  try { try { state.notes = await api("/api/notes") || []; } catch { state.notes = JSON.parse(localStorage.getItem("offline_notes") || "[]"); } } catch { state.notes = JSON.parse(localStorage.getItem("offline_notes") || "[]"); }
+  const notes = state.notes
+    .filter((note) => {
+      const q = state.notesQuery.trim().toLowerCase();
+      if (!q) return true;
+      return [note.title, note.content, note.bookTitle, note.createdAtLabel].join(" ").toLowerCase().includes(q);
+    })
+    .sort((a, b) => b.createdAt - a.createdAt);
+
+  const editNote = state.editNoteId ? state.notes.find((n) => n.id === state.editNoteId) : null;
+
+  app.innerHTML = '<div class="app-shell"><div class="notes-page"><div class="library-head"><div><h1 class="library-title">笔记</h1><p class="library-subtitle">阅读和记录分开。这里单独沉淀你的想法、摘抄、交易感受与日期。</p><div class="top-nav"><a href="#/">书库</a><a href="#/notes" class="active">笔记</a></div><span class="user-badge" style="margin-top:8px;display:inline-block;">' + state.username + '</span></div><div class="library-actions"><input class="search-input" id="notes-search-input" placeholder="搜索笔记 / 书名 / 日期" value="' + escapeAttr(state.notesQuery) + '" /></div></div><div class="note-compose">' + (state.editNoteId ? '<div class="note-meta" style="margin-bottom:8px;display:flex;align-items:center;gap:10px;">正在编辑笔记 <button class="ghost-btn" style="font-size:12px;padding:4px 10px;" id="cancel-edit-btn">取消编辑</button></div>' : "") + '<div class="note-compose-row"><input id="new-note-title" class="search-input" placeholder="笔记标题" value="' + escapeAttr(editNote?.title || "") + '" /><select id="new-note-book" class="search-input"><option value="">选择关联书籍（可不选）</option>' + library.books.map((book) => '<option value="' + escapeAttr(book.id) + '" ' + (editNote?.bookId === book.id ? "selected" : "") + '>' + escapeHtml(book.title) + '</option>').join("") + '</select></div><textarea id="new-note-content" class="search-input" style="min-height:160px; resize:vertical;" placeholder="写下你的摘抄、感受、判断、复盘......">' + escapeHtml(editNote?.content || "") + '</textarea><div style="display:flex; gap:12px; flex-wrap:wrap;"><button class="primary-btn" id="create-note-btn">' + (state.editNoteId ? "更新笔记" : "保存笔记") + '</button><div class="note-meta">会自动记录创建日期与时间。</div></div></div><div class="notes-grid">' + (notes.length ? notes.map(renderNoteCard).join("") : '<div class="empty-state">还没有笔记，先写第一条。</div>') + '</div></div></div>';
+
+  app.querySelector("#notes-search-input").addEventListener("input", (event) => {
+    state.notesQuery = event.target.value;
+    renderNotesPage(app);
+  });
+
+  app.querySelector("#create-note-btn").addEventListener("click", async () => {
+    const title = app.querySelector("#new-note-title").value.trim();
+    const content = app.querySelector("#new-note-content").value.trim();
+    const bookId = app.querySelector("#new-note-book").value;
+    const book = library.books.find((item) => item.id === bookId);
+    if (!title && !content) return;
+
+    if (state.editNoteId) {
+      try { try { await api("/api/notes/" + state.editNoteId, { method: "PUT", body: { title, content, bookId, bookTitle: book?.title } }); } catch { saveNoteOffline(state.editNoteId, { title, content, bookId, bookTitle: book?.title }); }; } catch { saveNoteOffline(state.editNoteId, { title, content, bookId, bookTitle: book?.title }); };
+      state.editNoteId = null;
+    } else {
+      try { try { await api("/api/notes", { method: "POST", body: { title, content, bookId, bookTitle: book?.title } }); } catch { saveNoteOffline(null, { title, content, bookId, bookTitle: book?.title }); }; } catch { saveNoteOffline(null, { title, content, bookId, bookTitle: book?.title }); };
+    }
+    renderNotesPage(app);
+  });
+
+  if (state.editNoteId) {
+    app.querySelector("#cancel-edit-btn").addEventListener("click", () => {
+      state.editNoteId = null;
+      renderNotesPage(app);
+    });
+  }
+
+  attachNoteCardListeners(app);
+}
+
+function renderNoteCard(note) {
+  return '<article class="note-card"><div class="note-card-actions"><button class="ghost-btn note-action-btn" data-edit-id="' + note.id + '" title="编辑">&#9998;</button><button class="ghost-btn note-action-btn note-delete-btn" data-delete-id="' + note.id + '" title="删除">&#10005;</button></div><h3 class="note-card-title">' + escapeHtml(note.title || "未命名笔记") + '</h3><div class="note-card-book">' + escapeHtml(note.bookTitle || "未绑定书籍") + '</div><div class="note-card-content">' + escapeHtml((note.content || "").substring(0, 200)) + ((note.content || "").length > 200 ? "..." : "") + '</div><div class="note-card-date">' + escapeHtml(note.createdAtLabel || "") + (note.updatedAt && note.updatedAt !== note.createdAt ? " &middot; 已编辑" : "") + '</div></article>';
+}
+
+function attachNoteCardListeners(app) {
+  app.querySelectorAll("[data-edit-id]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      state.editNoteId = btn.dataset.editId;
+      renderNotesPage(app);
+    });
+  });
+  app.querySelectorAll("[data-delete-id]").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const id = btn.dataset.deleteId;
+      if (!confirm("确定要删除这条笔记吗？此操作不可撤销。")) return;
+      try { try { await api("/api/notes/" + id, { method: "DELETE" }); } catch { deleteNoteOffline(id); }; } catch { deleteNoteOffline(id); };
+      state.editNoteId = null;
+      renderNotesPage(app);
+    });
+  });
+}
+
+async function renderReaderPage(app, id) {
+  const library = await loadLibrary();
+  const book = library.books.find((item) => item.id === id);
+  if (!book) { location.hash = "#/"; return; }
+
+  let serverPrefs; try { serverPrefs = await api("/api/prefs"); } catch { serverPrefs = JSON.parse(localStorage.getItem("offline_prefs") || "null"); }
+  state.prefs = serverPrefs || { fontSize: 22, pageWidth: 860, lineHeight: 1.95, bgColor: "#0f0f0f", textColor: "#f4f0e7" };
+  applyPrefs(state.prefs);
+
+  app.innerHTML = '<div class="reader-page"><div class="reader-toolbar"><div class="reader-toolbar-left"><button id="back-btn">返回目录</button><div class="reader-title">' + escapeHtml(book.title) + '</div></div><div class="reader-toolbar-right"><div class="reader-progress" id="reader-progress">准备中...</div><button id="sidebar-toggle">面板</button></div></div><div class="reader-layout"><div class="reader-main"><div class="reader-stage" id="reader-stage"></div></div><aside class="reader-sidebar ' + (state.sidebarOpen ? "open" : "") + '" id="reader-sidebar"><section class="reader-panel"><h3>阅读设置</h3><div class="font-row"><button class="font-chip" data-font="18">A-</button><button class="font-chip" data-font="22">A</button><button class="font-chip" data-font="26">A+</button><button class="font-chip" data-font="30">A++</button></div><div style="margin-top:14px;"><div class="note-meta" style="margin-bottom:6px;">阅读宽度</div><input id="width-range" class="range-input" type="range" min="560" max="1080" step="20" value="' + (state.prefs.pageWidth || 860) + '" /></div><div style="margin-top:14px;"><div class="note-meta" style="margin-bottom:6px;">行距 <span id="lh-val">' + (state.prefs.lineHeight || 1.95) + '</span></div><input id="line-height-range" class="range-input" type="range" min="1.2" max="3.0" step="0.05" value="' + (state.prefs.lineHeight || 1.95) + '" /></div><div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px;"><div><div class="note-meta" style="margin-bottom:4px;">背景色</div><input id="bg-color-input" class="color-input" type="color" value="' + (state.prefs.bgColor || "#0f0f0f") + '" /></div><div><div class="note-meta" style="margin-bottom:4px;">字体色</div><input id="text-color-input" class="color-input" type="color" value="' + (state.prefs.textColor || "#f4f0e7") + '" /></div></div><p class="reader-tip">字体仿宋加粗。笔记已从阅读器拆分为独立页面，阅读和记录分开。</p><div class="mobile-reading-actions"><a class="ghost-btn" href="#/notes">打开笔记页</a><a class="ghost-btn" href="#/">回书库</a></div></section><section class="reader-panel"><h3>当前书信息</h3><div class="note-meta">类型：' + book.ext.toUpperCase() + '</div><div class="note-meta">文件：' + escapeHtml(book.relativePath) + '</div><div class="note-meta">大小：' + formatSize(book.size) + '</div><div class="note-meta" style="margin-top:14px;">想记录时，请去独立笔记页，按书籍名称绑定保存。</div></section></aside></div></div>';
+
+  applyReaderColors(state.prefs);
+
+  app.querySelector("#back-btn").addEventListener("click", () => { location.hash = "#/"; });
+  app.querySelector("#sidebar-toggle").addEventListener("click", () => {
+    state.sidebarOpen = !state.sidebarOpen;
+    app.querySelector("#reader-sidebar").classList.toggle("open", state.sidebarOpen);
+  });
+
+  app.querySelectorAll("[data-font]").forEach((button) => {
+    button.classList.toggle("active", Number(button.dataset.font) === state.prefs.fontSize);
+    button.addEventListener("click", async () => {
+      state.prefs.fontSize = Number(button.dataset.font);
+      await savePrefsToServer(state.prefs);
+      applyPrefs(state.prefs);
+      renderApp();
+    });
+  });
+
+  app.querySelector("#width-range").addEventListener("input", (event) => {
+    state.prefs.pageWidth = Number(event.target.value);
+    applyPrefs(state.prefs);
+  });
+  app.querySelector("#width-range").addEventListener("change", async (event) => {
+    state.prefs.pageWidth = Number(event.target.value);
+    await savePrefsToServer(state.prefs);
+  });
+
+  const lhRange = app.querySelector("#line-height-range");
+  const lhVal = app.querySelector("#lh-val");
+  lhRange.addEventListener("input", () => {
+    const val = parseFloat(lhRange.value);
+    lhVal.textContent = val.toFixed(2);
+    state.prefs.lineHeight = val;
+    applyPrefs(state.prefs);
+  });
+  lhRange.addEventListener("change", async () => { await savePrefsToServer(state.prefs); });
+
+  app.querySelector("#bg-color-input").addEventListener("input", (event) => {
+    state.prefs.bgColor = event.target.value;
+    applyReaderColors(state.prefs);
+  });
+  app.querySelector("#bg-color-input").addEventListener("change", async (event) => {
+    state.prefs.bgColor = event.target.value;
+    await savePrefsToServer(state.prefs);
+  });
+
+  app.querySelector("#text-color-input").addEventListener("input", (event) => {
+    state.prefs.textColor = event.target.value;
+    applyReaderColors(state.prefs);
+  });
+  app.querySelector("#text-color-input").addEventListener("change", async (event) => {
+    state.prefs.textColor = event.target.value;
+    await savePrefsToServer(state.prefs);
+  });
+
+  const stage = app.querySelector("#reader-stage");
+  const progressEl = app.querySelector("#reader-progress");
+
+  if (book.ext === "epub") {
+    progressEl.textContent = "EPUB HTML 模式加载中...";
+    try {
+      state.currentCleanup = await mountEpubHtmlFallback(stage, book, progressEl);
+    } catch (fallbackError) {
+      console.error("EPUB fallback failed:", fallbackError);
+      progressEl.textContent = "EPUB 打开失败";
+      stage.innerHTML = '<div class="text-reader"><div class="text-reader-content">EPUB HTML 后备模式也失败了。错误：' + escapeHtml(String(fallbackError?.message || fallbackError || "unknown error")) + '</div></div>';
+      state.currentCleanup = null;
+    }
+  } else {
+    state.currentCleanup = await mountTextReader(stage, book, progressEl);
+  }
+}
+
+function renderBookCard(book) {
+  return '<article class="book-card"><div><div class="book-type">' + book.ext.toUpperCase() + '</div><div class="book-name">' + escapeHtml(book.title) + '</div><div class="book-meta">' + escapeHtml(book.relativePath) + '</div></div><div><div class="book-meta">' + formatSize(book.size) + ' &middot; ' + new Date(book.updatedAt).toLocaleDateString("zh-CN") + '</div><div class="book-actions"><a class="primary-btn" href="#/reader/' + book.id + '">开始阅读</a></div></div></article>';
+}
+
+async function mountTextReader(stage, book, progressEl) {
+  let text;
+  try {
+    const response = await fetch(book.textEndpoint || book.publicPath);
+    text = await response.text();
+  } catch {
+    text = window.__TXT_BOOKS__ && window.__TXT_BOOKS__[book.id] || '此书需要启动服务器才能阅读。请双击 start.bat 启动服务器后刷新页面。';
+  }
+  stage.innerHTML = '<div class="text-reader" id="text-reader-scroll"><div class="text-reader-content">' + escapeHtml(normalizeText(text)) + '</div></div>';
+
+  const scroller = stage.querySelector("#text-reader-scroll");
+  let serverProgress; try { serverProgress = await api("/api/progress"); } catch { serverProgress = {}; }
+  const bookProgress = serverProgress && serverProgress[book.id];
+  const savedRatio = bookProgress ? bookProgress.position : 0;
+
+  requestAnimationFrame(() => {
+    scroller.scrollTop = Math.max(0, (scroller.scrollHeight - scroller.clientHeight) * savedRatio);
+    updateTextProgress(scroller, progressEl);
+  });
+
+  let saveTimer = null;
+  const onScroll = () => {
+    const max = Math.max(1, scroller.scrollHeight - scroller.clientHeight);
+    const ratio = scroller.scrollTop / max;
+    updateTextProgress(scroller, progressEl);
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => { try { try { api("/api/progress/" + book.id, { method: "PUT", body: { position: ratio } }); } catch {}; } catch {}; }, 1000);
+  };
+
+  scroller.addEventListener("scroll", onScroll);
+  return () => { scroller.removeEventListener("scroll", onScroll); clearTimeout(saveTimer); };
+}
+
+async function mountEpubHtmlFallback(stage, book, progressEl) {
+  let payload;
+  try {
+    const response = await fetch('/api/books/' + book.id + '/epub-html');
+    if (!response.ok) throw new Error('fallback api failed: ' + response.status);
+    payload = await response.json();
+  } catch {
+    stage.innerHTML = '<div class="text-reader"><div class="text-reader-content" style="padding:40px;text-align:center;"><h2 style="color:#d4c29a;">需要服务器</h2><p>离线模式下无法解析 EPUB 文件内容。</p><p>请双击项目文件夹中的 <b>start.bat</b> 启动服务器，然后刷新页面。</p><p style="color:#9c978d;font-size:14px;">或者回到书库阅读 TXT 格式的书籍（已支持离线）。</p><br/><a href="#/" class="primary-btn">返回书库</a></div></div>';
+    progressEl.textContent = '需要服务器';
+    return () => {};
+  }
+
+  const chapters = payload.chapters || [];
+  const tocHtml = chapters.map((chapter, index) => '<button class="font-chip" data-chapter-index="' + index + '">' + escapeHtml(chapter.title || '章节 ' + (index + 1)) + '</button>').join("");
+  const bodyHtml = chapters.length
+    ? chapters.map((chapter, index) => '<section id="chapter-' + index + '" style="margin-bottom:40px;"><h2>' + escapeHtml(chapter.title || '章节 ' + (index + 1)) + '</h2><div>' + (chapter.html || '<p>' + escapeHtml(chapter.text || '') + '</p>') + '</div></section>').join("")
+    : '<div class="text-reader-content">' + escapeHtml(payload.fullText || "没有解析出正文内容") + '</div>';
+
+  stage.innerHTML = '<div class="text-reader" id="epub-fallback-scroll"><div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:24px;">' + (tocHtml || '<span class="reader-tip">没有可用目录，已直接展示正文。</span>') + '</div><div class="text-reader-content">' + bodyHtml + '</div></div>';
+
+  const scroller = stage.querySelector("#epub-fallback-scroll");
+  let serverProgress; try { serverProgress = await api("/api/progress"); } catch { serverProgress = {}; }
+  const bookProgress = serverProgress && serverProgress[book.id];
+  const savedRatio = bookProgress ? bookProgress.position : 0;
+
+  requestAnimationFrame(() => {
+    scroller.scrollTop = Math.max(0, (scroller.scrollHeight - scroller.clientHeight) * savedRatio);
+    updateTextProgress(scroller, progressEl);
+  });
+
+  let saveTimer = null;
+  const onScroll = () => {
+    const max = Math.max(1, scroller.scrollHeight - scroller.clientHeight);
+    const ratio = scroller.scrollTop / max;
+    updateTextProgress(scroller, progressEl);
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => { try { try { api("/api/progress/" + book.id, { method: "PUT", body: { position: ratio } }); } catch {}; } catch {}; }, 1000);
+  };
+
+  scroller.addEventListener("scroll", onScroll);
+  scroller.querySelectorAll("[data-chapter-index]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const section = scroller.querySelector('#chapter-' + button.dataset.chapterIndex);
+      if (section) section.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  });
+
+  progressEl.textContent = "EPUB HTML 模式";
+  return () => { scroller.removeEventListener("scroll", onScroll); clearTimeout(saveTimer); };
+}
+
+async function loadLibrary() {
+  if (state.library) return state.library;
+  try {
+    const response = await fetch("/api/library");
+    state.library = await response.json();
+  } catch {
+    state.library = window.__EMBEDDED_LIBRARY__ || { libraryRoot: "/books", total: 0, books: [] };
+  }
+  return state.library;
+}
+
+function getRoute() {
+  const raw = location.hash.replace(/^#/, "") || "/";
+  const match = raw.match(/^\/reader\/([^/]+)$/);
+  if (match) return { name: "reader", id: match[1] };
+  if (raw === "/notes") return { name: "notes" };
+  return { name: "library" };
+}
+
+function filterBooks(books, query) {
+  const keyword = query.trim().toLowerCase();
+  if (!keyword) return books;
+  return books.filter((book) => {
+    return [book.title, book.relativePath, book.ext].join(" ").toLowerCase().includes(keyword);
+  });
+}
+
+function applyPrefs(prefs) {
+  document.documentElement.style.setProperty("--font-size", prefs.fontSize + "px");
+  document.documentElement.style.setProperty("--page-width", (prefs.pageWidth || 860) + "px");
+  document.documentElement.style.setProperty("--line-height", String(prefs.lineHeight || 1.95));
+}
+
+function applyReaderColors(prefs) {
+  document.documentElement.style.setProperty("--reader-bg", prefs.bgColor || "#0f0f0f");
+  document.documentElement.style.setProperty("--reader-fg", prefs.textColor || "#f4f0e7");
+}
+
+async function savePrefsToServer(prefs) {
+  try { await api("/api/prefs", { method: "PUT", body: prefs }); } catch { localStorage.setItem("offline_prefs", JSON.stringify(prefs)); }
+}
+
+function cleanupCurrentView() {
+  if (typeof state.currentCleanup === "function") {
+    state.currentCleanup();
+    state.currentCleanup = null;
+  }
+}
+
+function updateTextProgress(scroller, target) {
+  const max = Math.max(1, scroller.scrollHeight - scroller.clientHeight);
+  const percent = Math.round((scroller.scrollTop / max) * 100);
+  target.textContent = "进度 " + percent + "%";
+}
+
+function normalizeText(text) {
+  return text.replace(/\r\n/g, "\n").replace(/\n{3,}/g, "\n\n").trim();
+}
+
+function formatSize(size) {
+  if (size < 1024 * 1024) return (size / 1024).toFixed(1) + " KB";
+  return (size / 1024 / 1024).toFixed(2) + " MB";
+}
+
+function escapeHtml(value) {
+  value = value || "";
+  return value.replace(/[&<>]/g, function(char) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[char]; });
+}
+
+
+function escapeAttr(value) {
+  return escapeHtml(value).replace(/"/g, "&quot;");
+}
+
+</script>
+</body>
+</html>

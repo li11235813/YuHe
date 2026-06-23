@@ -1,0 +1,554 @@
+:root {
+  --bg: #0f0f0f;
+  --panel: #151515;
+  --panel-soft: #1b1b1b;
+  --line: #2a2a2a;
+  --text: #f1efe8;
+  --muted: #9c978d;
+  --accent: #d4c29a;
+  --reader-bg: #0f0f0f;
+  --reader-fg: #f4f0e7;
+  --reader-sidebar-bg: #0c0c0c;
+  --font-size: 22px;
+  --line-height: 1.95;
+  --page-width: 860px;
+  --font-family: "FangSong", "STFangsong", "Noto Serif SC", serif;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--text); }
+body {
+  font-family: var(--font-family);
+  font-weight: 700;
+}
+
+.top-nav {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+
+.top-nav a {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 8px 14px;
+  color: var(--muted);
+}
+
+.top-nav a.active {
+  color: #111;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.notes-page {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 28px 24px 40px;
+}
+
+.notes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.note-card {
+  background: rgba(18,18,18,.95);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 18px;
+}
+
+.note-card-title {
+  font-size: 18px;
+  margin: 0 0 10px;
+}
+
+.note-card-book {
+  color: var(--accent);
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+.note-card-date {
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 12px;
+}
+
+.note-card-content {
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.8;
+  white-space: pre-wrap;
+}
+
+.note-compose {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.note-compose-row {
+  display: grid;
+  grid-template-columns: 1fr 180px;
+  gap: 12px;
+}
+
+.mobile-reading-actions {
+  display: none;
+}
+
+.range-input {
+  width: 100%;
+}
+
+button, input, textarea, select { font: inherit; }
+a { color: inherit; text-decoration: none; }
+
+.app-shell {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #050505 0%, #090909 100%);
+}
+
+.library-page {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 28px 24px 40px;
+}
+
+.library-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.library-title {
+  font-size: 34px;
+  margin: 0;
+}
+
+.library-subtitle {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.library-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.search-input,
+.note-editor textarea,
+.note-editor input {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  color: var(--text);
+  border-radius: 14px;
+  padding: 12px 14px;
+  outline: none;
+}
+
+.search-input {
+  min-width: 280px;
+}
+
+.ghost-btn,
+.primary-btn,
+.reader-toolbar button,
+.font-chip {
+  border: 1px solid var(--line);
+  color: var(--text);
+  background: var(--panel);
+  border-radius: 999px;
+  padding: 10px 14px;
+  cursor: pointer;
+}
+
+.primary-btn {
+  background: var(--accent);
+  color: #111;
+  border-color: var(--accent);
+}
+
+.book-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 18px;
+}
+
+.book-card {
+  background: rgba(18, 18, 18, 0.95);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 18px;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform .18s ease, border-color .18s ease;
+}
+
+.book-card:hover {
+  transform: translateY(-2px);
+  border-color: #474038;
+}
+
+.book-type {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: var(--panel-soft);
+  color: var(--accent);
+  font-size: 12px;
+}
+
+.book-name {
+  font-size: 20px;
+  line-height: 1.5;
+  margin: 18px 0 8px;
+}
+
+.book-meta {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.book-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.reader-page {
+  height: 100vh;
+  background: var(--reader-bg);
+  color: var(--reader-fg);
+}
+
+.reader-toolbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  background: rgba(5, 5, 5, 0.94);
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  backdrop-filter: blur(12px);
+}
+
+.reader-toolbar-left,
+.reader-toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.reader-title {
+  max-width: 42vw;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--muted);
+}
+
+.reader-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  height: 100vh;
+  padding-top: 70px;
+}
+
+.reader-main {
+  position: relative;
+  min-width: 0;
+  background: var(--reader-bg);
+}
+
+.reader-stage,
+#epub-reader {
+  position: absolute;
+  inset: 0;
+}
+
+.text-reader {
+  max-width: var(--page-width);
+  margin: 0 auto;
+  height: 100%;
+  padding: 36px 28px 56px;
+  overflow: auto;
+  scroll-behavior: smooth;
+}
+
+.text-reader-content {
+  font-size: var(--font-size);
+  line-height: var(--line-height);
+  white-space: pre-wrap;
+  word-break: break-word;
+  letter-spacing: 0.02em;
+}
+
+.reader-sidebar {
+  border-left: 1px solid rgba(255,255,255,0.06);
+  background: var(--reader-sidebar-bg);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.reader-panel {
+  padding: 18px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.reader-panel h3 {
+  margin: 0 0 12px;
+  font-size: 16px;
+}
+
+.font-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.font-chip.active {
+  background: var(--accent);
+  color: #111;
+  border-color: var(--accent);
+}
+
+.note-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+.note-editor textarea {
+  min-height: 240px;
+  resize: vertical;
+  line-height: 1.8;
+}
+
+.note-meta,
+.reader-progress,
+.reader-tip,
+.empty-state {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.empty-state {
+  padding: 48px 0;
+}
+
+.hidden { display: none; }
+
+@media (max-width: 980px) {
+  .reader-layout {
+    grid-template-columns: 1fr;
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .reader-main {
+    min-height: calc(100vh - 70px);
+  }
+
+  .reader-stage,
+  #epub-reader {
+    position: relative;
+    min-height: calc(100vh - 70px);
+  }
+
+  .reader-sidebar {
+    position: relative;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    height: auto;
+    transform: none;
+    transition: none;
+    z-index: 1;
+    border-left: none;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .reader-sidebar.open {
+    transform: none;
+  }
+
+  .search-input {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .library-head,
+  .library-actions,
+  .note-compose-row {
+    flex-direction: column;
+    align-items: stretch;
+    grid-template-columns: 1fr;
+  }
+
+  .reader-title {
+    max-width: 42vw;
+  }
+
+  .text-reader {
+    padding: 24px 18px 40px;
+    height: auto;
+    min-height: calc(100vh - 70px);
+  }
+
+  .mobile-reading-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 12px;
+  }
+
+  .notes-page {
+    padding: 20px 16px 32px;
+  }
+
+  .login-card {
+    width: 100%;
+    max-width: 380px;
+    padding: 32px 24px;
+  }
+
+  .library-head .library-actions:first-of-type {
+    order: -1;
+  }
+}
+
+
+/* Login page */
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 48px 40px;
+  background: rgba(18, 18, 18, 0.95);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+}
+
+.login-title {
+  font-size: 32px;
+  margin: 0 0 8px;
+  text-align: center;
+}
+
+.login-sub {
+  color: var(--muted);
+  font-size: 14px;
+  text-align: center;
+  margin: 0 0 28px;
+}
+
+.login-form {
+  display: grid;
+  gap: 14px;
+}
+
+.login-form .search-input {
+  width: 100%;
+}
+
+.login-error {
+  color: #e07060;
+  font-size: 13px;
+  text-align: center;
+  margin-top: 8px;
+}
+
+.login-switch {
+  text-align: center;
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 20px;
+}
+
+.login-switch a {
+  color: var(--accent);
+}
+
+/* Note card actions */
+.note-card {
+  position: relative;
+}
+
+.note-card-actions {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  gap: 6px;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.note-card:hover .note-card-actions {
+  opacity: 1;
+}
+
+.note-action-btn {
+  font-size: 14px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  min-width: 28px;
+  text-align: center;
+}
+
+.note-delete-btn:hover {
+  color: #e07060;
+  border-color: #e07060;
+}
+
+/* User badge */
+.user-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--panel-soft);
+  color: var(--accent);
+  font-size: 12px;
+}
+
+/* Color input */
+.color-input {
+  width: 100%;
+  height: 36px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 4px;
+  background: var(--panel);
+  cursor: pointer;
+}
+
+.color-input::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.color-input::-webkit-color-swatch {
+  border: none;
+  border-radius: 4px;
+}
